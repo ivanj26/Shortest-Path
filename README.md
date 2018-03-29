@@ -1,2 +1,2 @@
 # Shortest-Path
-Implementasi shortest path dengna A * Algorithm
+Implementasi shortest path dengan A * Algorithm
