@@ -2,16 +2,24 @@ package controller;
 
 import AStarAlgorithm.AStarAlgorithm;
 import AStarAlgorithm.Coordinate;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.FileChooser;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
 public class Controller {
 
+    public Button directionButton;
+    public ChoiceBox<String> sourceChoiceBox;
+    public ChoiceBox<String> destChoiceBox;
     private AStarAlgorithm aStarAlgorithm;
+
     public void onAboutClick(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About program");
@@ -26,7 +34,11 @@ public class Controller {
     }
 
     public void onGetDirection(ActionEvent actionEvent) {
-
+        if (sourceChoiceBox.getValue().equals(destChoiceBox.getValue())){
+            JOptionPane.showMessageDialog(null, "Source is the same place as Destination\nPlease choose different destination place.", "Message", JOptionPane.INFORMATION_MESSAGE );
+        } else {
+            aStarAlgorithm.findShortestPath(sourceChoiceBox.getValue(), destChoiceBox.getValue());
+        }
     }
 
     public void onChooseFile(ActionEvent actionEvent) {
@@ -120,6 +132,11 @@ public class Controller {
             }
             in.close();
 
+            sourceChoiceBox.setItems(FXCollections.observableArrayList(places));
+            destChoiceBox.setItems(FXCollections.observableArrayList(places));
+            sourceChoiceBox.setValue(places.get(0));
+            destChoiceBox.setValue(places.get(0));
+            directionButton.setDisable(false);
             aStarAlgorithm = new AStarAlgorithm(places, mat, coordinates);
         } catch (Exception ex){
             ex.printStackTrace();
