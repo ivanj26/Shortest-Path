@@ -1,6 +1,7 @@
 package controller;
 
 import AStarAlgorithm.AStarAlgorithm;
+import AStarAlgorithm.Coordinate;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
@@ -20,12 +21,12 @@ public class Controller {
                              "NIM I\t=\t13516059\n" +
                              "NIM II\t=\t13516104\n\n"
         );
-
         alert.setHeaderText("Several Information");
         alert.show();
     }
 
     public void onGetDirection(ActionEvent actionEvent) {
+
     }
 
     public void onChooseFile(ActionEvent actionEvent) {
@@ -37,7 +38,6 @@ public class Controller {
         File selectedFile =  fileChooser.showOpenDialog(null);
 
         if (selectedFile != null && selectedFile.exists()){
-            System.out.println(selectedFile.getPath());
             readFile(selectedFile.getPath());
         }
     }
@@ -78,7 +78,7 @@ public class Controller {
                 //do nothing, lewatin line pertama yang isinya tempat2
             }
 
-            while ((i = in.read()) != -1){
+            while ((char) (i = in.read()) != '&'){
                 // converts integer to character
                 c = (char) i;
 
@@ -95,8 +95,32 @@ public class Controller {
                     l = 0;
                 }
             }
+            mat[k][l] = Float.valueOf(stringBuffer.toString());
+            stringBuffer.setLength(0);
+            in.read();
 
-            aStarAlgorithm = new AStarAlgorithm(places, mat);
+            //Baca lintang dan bujur
+            Coordinate[] coordinates = new Coordinate[rows];
+            k = 0;
+            double lat = 0;
+            double lon;
+            while ((i = in.read()) != -1){
+                c = (char) i;
+                if (c != ' ' && c != '\n') {
+                    stringBuffer.append(c);
+                } else if (c == ' ') {
+                    lat = Double.valueOf(stringBuffer.toString());
+                    stringBuffer.setLength(0);
+                } else {
+                    lon = Double.valueOf(stringBuffer.toString());
+                    stringBuffer.setLength(0);
+                    coordinates[k] = new Coordinate(lat, lon);
+                    k++;
+                }
+            }
+            in.close();
+
+            aStarAlgorithm = new AStarAlgorithm(places, mat, coordinates);
         } catch (Exception ex){
             ex.printStackTrace();
         }
