@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Controller {
 
@@ -19,6 +20,7 @@ public class Controller {
     public ChoiceBox<String> sourceChoiceBox;
     public ChoiceBox<String> destChoiceBox;
     private AStarAlgorithm aStarAlgorithm;
+    private float[][] mat;
 
     public void onAboutClick(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -33,10 +35,12 @@ public class Controller {
         alert.show();
     }
 
-    public void onGetDirection(ActionEvent actionEvent) {
+    public void onGetDirection(ActionEvent actionEvent) throws IOException {
         if (sourceChoiceBox.getValue().equals(destChoiceBox.getValue())){
             JOptionPane.showMessageDialog(null, "Source is the same place as Destination\nPlease choose different destination place.", "Message", JOptionPane.INFORMATION_MESSAGE );
         } else {
+            Runtime.getRuntime().exec("clear");
+            aStarAlgorithm.setMatriksBobot(deepCopy(mat));
             aStarAlgorithm.findShortestPath(sourceChoiceBox.getValue(), destChoiceBox.getValue());
         }
     }
@@ -81,7 +85,7 @@ public class Controller {
 
             //Matriks berbobot siap diassign
             in = new FileInputStream(path);
-            Float[][] mat = new Float[rows][cols];
+            mat = new float[rows][cols];
 
             int k = 0;
             int l = 0;
@@ -97,17 +101,17 @@ public class Controller {
                 if (c != ' ' && c != '\n') {
                     stringBuffer.append(c);
                 } else if (c == ' ') {
-                    mat[k][l] = Float.valueOf(stringBuffer.toString());
+                    mat[k][l] = Float.parseFloat(stringBuffer.toString());
                     l++;
                     stringBuffer.setLength(0);
                 } else {
-                    mat[k][l] = Float.valueOf(stringBuffer.toString());
+                    mat[k][l] = Float.parseFloat(stringBuffer.toString());
                     stringBuffer.setLength(0);
                     k++;
                     l = 0;
                 }
             }
-            mat[k][l] = Float.valueOf(stringBuffer.toString());
+            mat[k][l] = Float.parseFloat(stringBuffer.toString());
             stringBuffer.setLength(0);
             in.read();
 
@@ -121,10 +125,10 @@ public class Controller {
                 if (c != ' ' && c != '\n') {
                     stringBuffer.append(c);
                 } else if (c == ' ') {
-                    lat = Double.valueOf(stringBuffer.toString());
+                    lat = Double.parseDouble(stringBuffer.toString());
                     stringBuffer.setLength(0);
                 } else {
-                    lon = Double.valueOf(stringBuffer.toString());
+                    lon = Double.parseDouble(stringBuffer.toString());
                     stringBuffer.setLength(0);
                     coordinates[k] = new Coordinate(lat, lon);
                     k++;
@@ -137,9 +141,20 @@ public class Controller {
             sourceChoiceBox.setValue(places.get(0));
             destChoiceBox.setValue(places.get(0));
             directionButton.setDisable(false);
-            aStarAlgorithm = new AStarAlgorithm(places, mat, coordinates);
+
+            aStarAlgorithm = new AStarAlgorithm(places, deepCopy(mat), coordinates);
         } catch (Exception ex){
             ex.printStackTrace();
         }
+    }
+
+    private float[][] deepCopy(float[][] mat) {
+        final float[][] result = new float[mat.length][];
+        for (int i = 0; i < mat.length; i++) {
+            result[i] = Arrays.copyOf(mat[i], mat[i].length);
+            // For Java versions prior to Java 6 use the next:
+            // System.arraycopy(original[i], 0, result[i], 0, original[i].length);
+        }
+        return result;
     }
 }
