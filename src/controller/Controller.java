@@ -42,6 +42,7 @@ public class Controller {
             Runtime.getRuntime().exec("clear");
             aStarAlgorithm.setMatriksBobot(deepCopy(mat));
             aStarAlgorithm.findShortestPath(sourceChoiceBox.getValue(), destChoiceBox.getValue());
+            aStarAlgorithm.drawMap();
         }
     }
 

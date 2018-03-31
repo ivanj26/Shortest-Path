@@ -1,5 +1,10 @@
 package AStarAlgorithm;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class AStarAlgorithm {
@@ -8,6 +13,7 @@ public class AStarAlgorithm {
     private float[][] matriksBobot;
     private Coordinate[] coordinates;
     private Queue<Path> pathQueue;
+    private boolean hasSolution = false;
     public String getNameOfPlace(int i){
         return places.get(i);
     }
@@ -96,10 +102,68 @@ public class AStarAlgorithm {
             }
         }
 
-        solutionPath.printPath();
+        if (solutionPath != null){
+            solutionPath.printPath();
+            hasSolution = true;
+        }
     }
 
     public void setMatriksBobot(float[][] matriksBobot) {
         this.matriksBobot = matriksBobot;
+    }
+
+    public void drawMap() {
+        if (isCreateJSONSuccess()){
+
+        }
+    }
+
+    private boolean isCreateJSONSuccess() {
+        if (hasSolution){
+            JSONObject featureCollection = new JSONObject();
+            featureCollection.put("type", "FeatureCollection");
+            JSONArray features = new JSONArray();
+
+            for (int i = 0; i < places.size(); i++){
+                //Object feature
+                JSONObject feature = new JSONObject();
+                feature.put("type", "Feature");
+                feature.put("id", i);
+
+                //Object geometry
+                JSONObject geometry = new JSONObject();
+                geometry.put("type", "Point");
+
+                //Add latitude and longitude
+                JSONArray coors = new JSONArray();
+                coors.add(0, coordinates[i].getLatitude());
+                coors.add(1, coordinates[i].getLongitude());
+
+                //Add coord to geometry object
+                geometry.put("coordinates", coors);
+
+                //Add geomtry to feature object
+                feature.put("geometry", geometry);
+
+                //Add to features
+                features.add(feature);
+            }
+
+            //Add to featureCollection
+            featureCollection.put("features", features);
+
+            final String dir = System.getProperty("user.dir");
+            try{
+                FileWriter file = new FileWriter(dir + "/json/location.json");
+                file.write(featureCollection.toJSONString());
+                file.flush();
+                file.close();
+                return true;
+            } catch (IOException ex){
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
