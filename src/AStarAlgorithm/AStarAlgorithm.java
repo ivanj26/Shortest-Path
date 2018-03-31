@@ -130,14 +130,19 @@ public class AStarAlgorithm {
                 feature.put("type", "Feature");
                 feature.put("id", i);
 
+                //Add property seperti nama tempat
+                JSONObject name = new JSONObject();
+                name.put("name", places.get(i));
+                feature.put("properties", name);
+
                 //Object geometry
                 JSONObject geometry = new JSONObject();
                 geometry.put("type", "Point");
 
                 //Add latitude and longitude
                 JSONArray coors = new JSONArray();
-                coors.add(0, coordinates[i].getLatitude());
-                coors.add(1, coordinates[i].getLongitude());
+                coors.add(0, coordinates[i].getLongitude());
+                coors.add(1, coordinates[i].getLatitude());
 
                 //Add coord to geometry object
                 geometry.put("coordinates", coors);

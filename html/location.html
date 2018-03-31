@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<title>Maps</title>
+<html>
+  <head>
+    <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: {lat: 0, lng: 0}
+        });
+        map.data.loadGeoJson('../json/location.json',
+            {},
+            function(features){
+               map.data.forEach(function(feature) {
+                  var marker = new google.maps.Marker({
+                    map: map,
+                    label: feature.getProperty('name'),
+                    animation: google.maps.Animation.DROP,
+                    position: feature.getGeometry().get()
+                  });
+                  map.setCenter(marker.getPosition());
+               });
+               map.data.forEach(function(feature) {
+                  map.data.remove(feature);
+               });
+            }
+        );
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1jE4-hRJy_HLOUpIl9leELl-I-I24NgY&callback=initMap">
+    </script>
+  </body>
+</html>
