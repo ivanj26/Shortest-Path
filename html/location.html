@@ -21,15 +21,24 @@
             {},
             function(features){
                map.data.forEach(function(feature) {
+                  var name = "Place\t= " + feature.getProperty('name') + "\nLat/Lng\t= ";
+                  var lat = feature.getGeometry().get().lat();
+                  var lng = feature.getGeometry().get().lng();
+                  var forTitle = name + lat + ", " + lng;
                   var marker = new google.maps.Marker({
                     map: map,
+                    title: forTitle,
                     label: feature.getProperty('name'),
                     animation: google.maps.Animation.DROP,
-                    position: feature.getGeometry().get()
+                    position: {
+                        lat,
+                        lng
+                    }
                   });
                   map.setCenter(marker.getPosition());
                });
                map.data.forEach(function(feature) {
+                  console.debug('remove');
                   map.data.remove(feature);
                });
             }

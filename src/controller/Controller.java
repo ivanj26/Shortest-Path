@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
 
 import javax.swing.*;
@@ -19,6 +20,8 @@ public class Controller {
     public Button directionButton;
     public ChoiceBox<String> sourceChoiceBox;
     public ChoiceBox<String> destChoiceBox;
+    public Label pathLabel;
+    public Label directionLabel;
     private AStarAlgorithm aStarAlgorithm;
     private float[][] mat;
 
@@ -43,6 +46,12 @@ public class Controller {
             aStarAlgorithm.setMatriksBobot(deepCopy(mat));
             aStarAlgorithm.findShortestPath(sourceChoiceBox.getValue(), destChoiceBox.getValue());
             aStarAlgorithm.drawMap();
+
+            if (aStarAlgorithm.hasSolution()){
+                pathLabel.setText(aStarAlgorithm.pathToString());
+                pathLabel.setVisible(true);
+                directionLabel.setVisible(true);
+            }
         }
     }
 

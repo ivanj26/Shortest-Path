@@ -59,13 +59,18 @@ public class Path {
         return p.path.get(p.path.size()-1);
     }
 
-    public void printPath(){
-        System.out.println("Cost: " + f);
+    public String printPath(){
+        StringBuffer stringBuffer = new StringBuffer();
         for(int i = 0; i < path.size(); i++){
             if (i != path.size() - 1)
-                System.out.print(path.get(i) + " -> ");
+                stringBuffer.append(path.get(i) + " -> ");
             else
-                System.out.println(path.get(i));
+                stringBuffer.append(path.get(i));
         }
+        return stringBuffer.toString();
+    }
+
+    public List<String> getPath() {
+        return path;
     }
 }

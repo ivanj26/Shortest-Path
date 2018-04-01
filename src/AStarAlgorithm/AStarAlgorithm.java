@@ -1,5 +1,9 @@
 package AStarAlgorithm;
 
+import javafx.scene.Scene;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -9,11 +13,17 @@ import java.util.*;
 
 public class AStarAlgorithm {
     //Atribut : Places (nama tempat) dan Matrix Ketetanggaan Berbobot
+    private Path solutionPath = null;
     private ArrayList<String> places;
     private float[][] matriksBobot;
     private Coordinate[] coordinates;
     private Queue<Path> pathQueue;
     private boolean hasSolution = false;
+
+    public boolean hasSolution() {
+        return hasSolution;
+    }
+
     public String getNameOfPlace(int i){
         return places.get(i);
     }
@@ -49,7 +59,7 @@ public class AStarAlgorithm {
      * @param destination Simpul/Tempat tujuan
      */
     public void findShortestPath(String source, String destination) {
-        Path solutionPath = null;
+        solutionPath = null;
         pathQueue = new PriorityQueue<>((o1, o2) -> {
             if (o1.getF() > o2.getF()) {
                 return 1;
@@ -103,9 +113,12 @@ public class AStarAlgorithm {
         }
 
         if (solutionPath != null){
-            solutionPath.printPath();
             hasSolution = true;
         }
+    }
+
+    public String pathToString(){
+        return solutionPath.printPath();
     }
 
     public void setMatriksBobot(float[][] matriksBobot) {
@@ -114,7 +127,16 @@ public class AStarAlgorithm {
 
     public void drawMap() {
         if (isCreateJSONSuccess()){
+            WebView webView = new WebView();
+            WebEngine webEngine = webView.getEngine();
+            webEngine.load("http://localhost:63342/Shortest-Path/html/location.html?_ijt=37f5kprohf7h6jead5sdfvm2c6");
 
+            Stage stage = new Stage();
+            stage.setTitle("Direction from: " + solutionPath.getPath().get(0) + " to " + solutionPath.getPath().get(solutionPath.getPath().size() - 1));
+            Scene scene = new Scene(webView, 400, 420);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
         }
     }
 
@@ -123,10 +145,14 @@ public class AStarAlgorithm {
             JSONObject featureCollection = new JSONObject();
             featureCollection.put("type", "FeatureCollection");
             JSONArray features = new JSONArray();
+            JSONObject feature;
+            JSONObject geometry;
+            JSONArray coors;
 
+            //Add point
             for (int i = 0; i < places.size(); i++){
                 //Object feature
-                JSONObject feature = new JSONObject();
+                feature = new JSONObject();
                 feature.put("type", "Feature");
                 feature.put("id", i);
 
@@ -136,11 +162,11 @@ public class AStarAlgorithm {
                 feature.put("properties", name);
 
                 //Object geometry
-                JSONObject geometry = new JSONObject();
+                geometry = new JSONObject();
                 geometry.put("type", "Point");
 
                 //Add latitude and longitude
-                JSONArray coors = new JSONArray();
+                coors = new JSONArray();
                 coors.add(0, coordinates[i].getLongitude());
                 coors.add(1, coordinates[i].getLatitude());
 
@@ -154,6 +180,40 @@ public class AStarAlgorithm {
                 features.add(feature);
             }
 
+            //call constructor
+            feature = new JSONObject();
+            feature.put("type", "Feature");
+            feature.put("id", places.size());
+
+            //Add property
+            JSONObject name = new JSONObject();
+            name.put("name", "Route");
+            feature.put("properties", name);
+
+            //Object geometry
+            geometry = new JSONObject();
+            geometry.put("type", "LineString");
+
+            //Array object coors
+            coors = new JSONArray();
+            for (int i = 0; i < solutionPath.getPath().size(); i++){
+                JSONArray coor = new JSONArray();
+                coor.add(0, coordinates[places.indexOf(solutionPath.getPath().get(i))].getLongitude());
+                coor.add(1, coordinates[places.indexOf(solutionPath.getPath().get(i))].getLatitude());
+
+                //Add latitude and longitude
+                coors.add(i, coor);
+            }
+
+            //Add to geometry
+            geometry.put("coordinates", coors);
+
+            //Add geomtry to feature object
+            feature.put("geometry", geometry);
+
+            //Add to features
+            features.add(feature);
+
             //Add to featureCollection
             featureCollection.put("features", features);
 
@@ -163,8 +223,12 @@ public class AStarAlgorithm {
                 file.write(featureCollection.toJSONString());
                 file.flush();
                 file.close();
+                Thread.sleep(200);
                 return true;
             } catch (IOException ex){
+                return false;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
                 return false;
             }
         } else {
