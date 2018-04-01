@@ -82,6 +82,7 @@ public class AStarAlgorithm {
             }
         }
 
+        int u = 0;
         while (!pathQueue.isEmpty()) {
             //minPath punya ongkos f lebih kecil dibanding fungsi f pada path lain
             Path minPath = pathQueue.remove();
@@ -98,17 +99,19 @@ public class AStarAlgorithm {
                     }
                 }
             } else {
+                System.out.println("Iterasi ke-" + u);
                 src = places.indexOf(Path.getLastPlace(minPath));
                 for (int j = 0; j < places.size(); j++) {
                     if (matriksBobot[src][j] != -1.0f) {
-                        Path tempPath  = new Path(minPath, places.get(j), matriksBobot[src][j], Coordinate.calculateDistance(coordinates[j], coordinates[dest]));
+                        Path tempPath = new Path(minPath, places.get(j), matriksBobot[src][j], Coordinate.calculateDistance(coordinates[j], coordinates[dest]));
                         pathQueue.add(tempPath);
                         matriksBobot[src][j] = -1.0f;
                         matriksBobot[j][src] = -1.0f;
-                        tempPath.printPath();
+                        System.out.println(tempPath.printPath(true));
                         System.out.println();
                     }
                 }
+                u++;
             }
         }
 
@@ -118,7 +121,7 @@ public class AStarAlgorithm {
     }
 
     public String pathToString(){
-        return solutionPath.printPath();
+        return solutionPath.printPath(false);
     }
 
     public void setMatriksBobot(float[][] matriksBobot) {

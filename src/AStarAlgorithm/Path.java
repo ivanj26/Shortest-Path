@@ -1,5 +1,6 @@
 package AStarAlgorithm;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,20 @@ public class Path {
         return p.path.get(p.path.size()-1);
     }
 
-    public String printPath(){
+    public String printCost(){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("Cost f\t= " + f + '\n' );
+        stringBuffer.append("Cost g\t= " + g + '\n');
+        stringBuffer.append("Cost h\t= " + h + '\n');
+        stringBuffer.append("Path: ");
+        return stringBuffer.toString();
+    }
+
+    public String printPath(boolean isCostDisplayed){
+        String cost = "";
+        if (isCostDisplayed){
+            cost = printCost();
+        }
         StringBuffer stringBuffer = new StringBuffer();
         for(int i = 0; i < path.size(); i++){
             if (i != path.size() - 1)
@@ -67,7 +81,7 @@ public class Path {
             else
                 stringBuffer.append(path.get(i));
         }
-        return stringBuffer.toString();
+        return cost + stringBuffer.toString();
     }
 
     public List<String> getPath() {
