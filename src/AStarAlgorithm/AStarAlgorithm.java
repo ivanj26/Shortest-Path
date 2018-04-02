@@ -6,7 +6,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -87,17 +86,17 @@ public class AStarAlgorithm {
             //minPath punya ongkos f lebih kecil dibanding fungsi f pada path lain
             Path minPath = pathQueue.remove();
             if (places.indexOf(Path.getLastPlace(minPath)) == dest) {
-                if (solutionPath == null) {
+//                if (solutionPath == null) {
                     solutionPath = minPath;
-                    if (!pathQueue.isEmpty()) {
-                        Path tempPath = pathQueue.remove();
-                        if (solutionPath.getF() >= tempPath.getF()) {
-                            pathQueue.add(tempPath);
-                        } else {
+//                    if (!pathQueue.isEmpty()) {
+//                        Path tempPath = pathQueue.remove();
+//                        if (solutionPath.getF() >= tempPath.getF()) {
+//                            pathQueue.add(tempPath);
+//                        } else {
                             pathQueue.clear();
-                        }
-                    }
-                }
+//                        }
+//                    }
+//                }
             } else {
                 System.out.println("Iterasi ke-" + u);
                 src = places.indexOf(Path.getLastPlace(minPath));
