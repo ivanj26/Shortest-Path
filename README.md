@@ -18,8 +18,8 @@ This app requires source 9 and target 9. So, you'll need to install JDK1.9.
 
 # Screenshots
 
-![App Screenshot #1](./screenshots/Screen Shot 2021-09-09 at 07.59.22.png)
+![App Screenshot #1](https://github.com/ivanj26/Shortest-Path/blob/master/screenshots/Screen%20Shot%202021-09-09%20at%2007.59.22.png)
 **Figure 1** - Application preview
 
-![App Screenshot #2](./screenshots/Screen Shot 2021-09-09 at 08.00.57.png)
+![App Screenshot #2](https://github.com/ivanj26/Shortest-Path/blob/master/screenshots/Screen%20Shot%202021-09-09%20at%2008.00.57.png)
 **Figure 2** - Application preview
