@@ -8,7 +8,7 @@ This app requires source 9 and target 9. So, you'll need to install JDK1.9.
 
 1. Clone the repository.
 2. Open the project using your favorite IDE.
-3. Don't forget to install JDK1.9.
+3. Don't forget to install JDK1.9 and install json-simple.jar.
 4. After did several project setup on your PC, you'll need to inject your Google API key into `location.html` file.
 5. Open the application, choose file by clicking `File tab > Choose File`.
 6. You can choose one of test file which contains list of places structured in GeoJSON format.
