@@ -6,9 +6,13 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class AStarAlgorithm {
     //Atribut : Places (nama tempat) dan Matrix Ketetanggaan Berbobot
@@ -131,7 +135,8 @@ public class AStarAlgorithm {
         if (isCreateJSONSuccess()){
             WebView webView = new WebView();
             WebEngine webEngine = webView.getEngine();
-            webEngine.load("http://localhost:63342/Shortest-Path/html/location.html?_ijt=37f5kprohf7h6jead5sdfvm2c6");
+            final URL mapsUrl = this.getClass().getResource("location.html");
+            webEngine.load(mapsUrl.toExternalForm());
 
             Stage stage = new Stage();
             stage.setTitle("Direction from: " + solutionPath.getPath().get(0) + " to " + solutionPath.getPath().get(solutionPath.getPath().size() - 1));
