@@ -1,6 +1,9 @@
 # Shortest-Path
 Application to find the shortest path using A-star Algorithm.
 
+# Type of Project
+School Project
+
 # Requirements
 This app requires source 9 and target 9. So, you'll need to install JDK1.9.
 
